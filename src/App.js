@@ -1,18 +1,43 @@
+import React from 'react';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { blueGrey, green } from '@material-ui/core/colors';
 import logo from './logo.svg';
-import './App.css';
-import SocketIOTest from './SocketIOTest';
+import './_styles/App.css';
+import Clients from './_containers/Clients';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-      </header>
+  const theme = createMuiTheme({
+    palette: {
+      primary: blueGrey,
+      secondary: green,
+    },
+    overrides: {
+      MuiButton: {
+        root: {
+          margin: '10px',
+          padding: '10px',
+        },
+      },
+      MuiGrid: {
+        item: {
+          padding: '10px',
+        },
+      },
+    },
+  });
 
-      <main>
-        <SocketIOTest />
-      </main>
-    </div>
+  return (
+    <ThemeProvider theme={theme}>
+      <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+        </header>
+
+        <main className="App-main">
+          <Clients />
+        </main>
+      </div>
+    </ThemeProvider>
   );
 }
 

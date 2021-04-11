@@ -20,9 +20,11 @@ module.exports = {
   rules: {
     'no-param-reassign': ['warn', { props: false }],
     'no-unused-vars': 'warn',
+    'no-console': 'off',
     'max-len': ['warn', { code: 120 }],
+    'import/order': ['error'],
     'import/no-named-as-default': 'warn',
-    'import/prefer-default-export': 'warn',
+    'import/prefer-default-export': 'off',
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     'react/no-deprecated': 'warn',
     'react/prop-types': 'warn',
