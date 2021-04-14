@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 import { io } from 'socket.io-client';
-import { log, socketIOEndpoint, socketToken } from '../../../utilities';
+import { log, socketIOGCEndpoint, socketToken } from '../../../utilities';
 import HitList from '../../../_components/HitList';
 import SocketIOSVG from '../../../_components/Logo/SocketIO';
 
@@ -16,7 +16,7 @@ import SocketIOSVG from '../../../_components/Logo/SocketIO';
 // const productSocket = io("https://example.com/product", { forceNew: true }); // the "product" namespace
 // const orderSocket = io("https://example.com/order", { forceNew: true }); // the "order" namespace
 
-function SocketIO() {
+function SocketIOGC() {
   const [, setChannel] = React.useState(null);
   const [socketio, setSocket] = React.useState(null);
   const [gameId, setGameId] = React.useState('');
@@ -35,13 +35,13 @@ function SocketIO() {
       setChannel(socket.connected ? socket.id : '');
       log(
         'info',
-        `New connection established to ${socketIOEndpoint}`,
+        `New connection established to ${socketIOGCEndpoint}`,
         socket.id,
       );
 
       socket.emit('_game_running-test-data', {
-        name: 'Bruce Banner',
-        nickname: 'El Impotente Hulk',
+        name: 'John Rambo',
+        nickname: 'John Salchichon',
       });
     });
     /**
@@ -75,10 +75,9 @@ function SocketIO() {
 
   React.useEffect(() => {
     // effect
-    const socket = io(socketIOEndpoint, {
-      forceNew: true,
-      path: '/socket.io-server2',
-      // transports: ['websocket'],
+    const socket = io(socketIOGCEndpoint, {
+      // forceNew: true,
+      path: '/game-controller-socket.io',
       reconnectionDelayMax: 10000,
       withCredentials: true,
       extraHeaders: {
@@ -171,4 +170,4 @@ function SocketIO() {
   );
 }
 
-export default SocketIO;
+export default SocketIOGC;
