@@ -1,13 +1,3 @@
-export const socketIOPort = 4010;
-export const socketIOEndpoint = `http://localhost:${socketIOPort}?type=devices`;
-export const socketIOGCPort = 3010;
-export const socketIOGCEndpoint = `http://localhost:${socketIOGCPort}?type=devices`;
-export const socketToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
-
-export const apolloPort = 3009;
-export const apolloHttpUri = `http://localhost:${apolloPort}/graphql`;
-export const apolloWsUri = `ws://localhost:${apolloPort}/subscriptions`;
-
 export function log(type, msg, ...args) {
   switch (type) {
     case 'info':

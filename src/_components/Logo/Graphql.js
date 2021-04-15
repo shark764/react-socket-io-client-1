@@ -1,10 +1,11 @@
+/* eslint-disable max-len */
 import React from 'react';
 
 function GraphqlSVG() {
   return (
     <svg
-      width="35"
-      height="35"
+      width="25"
+      height="25"
       preserveAspectRatio="xMidYMid"
       viewBox="0 0 256 288"
     >

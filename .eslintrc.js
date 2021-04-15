@@ -1,4 +1,5 @@
 module.exports = {
+  root: true,
   env: {
     browser: true,
     es2021: true,
@@ -20,6 +21,7 @@ module.exports = {
   rules: {
     'no-param-reassign': ['warn', { props: false }],
     'no-unused-vars': 'warn',
+    'no-underscore-dangle': 'warn',
     'no-console': 'off',
     'max-len': ['warn', { code: 120 }],
     'import/order': ['error'],
@@ -34,5 +36,15 @@ module.exports = {
     'jsx-a11y/click-events-have-key-events': 'warn',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
+    // 'max-len': [
+    //   'warn',
+    //   {
+    //     code: 120,
+    //     ignoreComments: true,
+    //     ignoreTrailingComments: true,
+    //     ignoreUrls: true,
+    //     ignorePattern: 'd="([\\s\\S]*?)"',
+    //   },
+    // ],
   },
 };

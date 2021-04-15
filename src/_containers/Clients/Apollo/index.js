@@ -61,27 +61,32 @@ function Apollo() {
 
   return (
     <Grid item xs={12} sm={12} lg={12} xl={12}>
-      <Box elevation={3} m={2} boxShadow={3} p={4}>
-        <Typography variant="h4" display="inline">
+      <Box elevation={3} m={1} boxShadow={3} p={2}>
+        <Typography variant="h5" display="inline">
+          Reporting BFF Server
+        </Typography>
+        {' '}
+        <Typography display="inline">
           Using
           {' '}
           <Link href="https://graphql.org/learn/" target="_blank">
             Graphql
           </Link>
         </Typography>
-        {' '}
         <GraphqlSVG />
         {gameSubscription.loading ? (
           <>
             <Typography color="primary">Waiting for a Game</Typography>
-            <CircularProgress color="secondary" />
+            <CircularProgress color="secondary" size={25} />
           </>
         ) : (
-          <Typography variant="h6" gutterBottom color="secondary">
-            Game ID:
-            {' '}
-            {gameSubscription.data.gameCreated.id}
-          </Typography>
+          <Box m={1}>
+            <Typography variant="body1" gutterBottom color="secondary">
+              Game ID:
+              {' '}
+              {gameSubscription.data.gameCreated.id}
+            </Typography>
+          </Box>
         )}
         <HitList rows={hitsSummary} />
       </Box>

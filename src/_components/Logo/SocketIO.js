@@ -1,10 +1,11 @@
+/* eslint-disable max-len */
 import React from 'react';
 
 function SocketIOSVG() {
   return (
     <svg
-      width="35"
-      height="35"
+      width="25"
+      height="25"
       preserveAspectRatio="xMinYMin meet"
       viewBox="0 0 256 256"
     >

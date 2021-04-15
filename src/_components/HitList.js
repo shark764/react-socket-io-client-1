@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -11,14 +12,25 @@ import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   row: {
-    backgroundColor: 'lightblue',
+    backgroundColor: '#455a64',
   },
   cell: {
     whiteSpace: 'normal',
     wordWrap: 'break-word',
+    wordBreak: 'break-all',
+    padding: 3,
+  },
+  header: {
+    whiteSpace: 'normal',
+    wordWrap: 'break-word',
+    wordBreak: 'break-all',
+    padding: 3,
+    color: '#ffffff',
+    fontWeight: 900,
   },
 }));
 
+// eslint-disable-next-line react/prop-types
 function HitList({ rows }) {
   const classes = useStyles();
 
@@ -27,16 +39,16 @@ function HitList({ rows }) {
       <Table size="small" aria-label="simple table">
         <TableHead>
           <TableRow className={classes.row}>
-            <TableCell className={classes.cell}>Hit ID</TableCell>
-            <TableCell className={classes.cell}>Client ID</TableCell>
-            <TableCell className={classes.cell}>Game ID</TableCell>
-            <TableCell className={classes.cell}>Device ID</TableCell>
-            <TableCell className={classes.cell}>Player ID</TableCell>
-            <TableCell className={classes.cell}>Value 1</TableCell>
-            <TableCell className={classes.cell}>Value 2</TableCell>
-            <TableCell className={classes.cell}>Value 3</TableCell>
-            <TableCell className={classes.cell}>Value 4</TableCell>
-            <TableCell className={classes.cell}>Time</TableCell>
+            <TableCell className={classes.header}>Hit ID</TableCell>
+            <TableCell className={classes.header}>Client ID</TableCell>
+            <TableCell className={classes.header}>Game ID</TableCell>
+            <TableCell className={classes.header}>Device ID</TableCell>
+            <TableCell className={classes.header}>Player ID</TableCell>
+            <TableCell className={classes.header}>Value 1</TableCell>
+            <TableCell className={classes.header}>Value 2</TableCell>
+            <TableCell className={classes.header}>Value 3</TableCell>
+            <TableCell className={classes.header}>Value 4</TableCell>
+            <TableCell className={classes.header}>Time</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
