@@ -1,21 +1,32 @@
+import * as React from 'react';
 import { Grid } from '@material-ui/core';
-import React from 'react';
-import Apollo from './Apollo';
-import ReportingBFF from './ReportingBFF';
-import GameController from './GameController';
+import { ApolloUIClient } from './Apollo';
+import { ReportingClient } from './Reporting';
+import { DeviceSimulator } from './DeviceSimulator';
+import { Log } from '../../_components/Log';
+import { LogProvider } from '../LogContext';
 
-function Clients() {
+export function Clients() {
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <Grid container justify="center" spacing={2}>
-          <GameController />
-          <ReportingBFF />
-          <Apollo />
+      <LogProvider>
+        <Grid item container spacing={2} xs={7}>
+          <DeviceSimulator />
         </Grid>
-      </Grid>
+        <Grid item xs={5}>
+          <Log />
+        </Grid>
+      </LogProvider>
+      <LogProvider>
+        <Grid item container spacing={2} xs={7}>
+          <ReportingClient />
+        </Grid>
+        <Grid item xs={5}>
+          <Log />
+        </Grid>
+      </LogProvider>
+
+      {/* <ApolloUIClient /> */}
     </Grid>
   );
 }
-
-export default Clients;

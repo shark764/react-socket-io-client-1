@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import HitList from '../../../_components/HitList';
 import GraphqlSVG from '../../../_components/Logo/Graphql';
+import { Wrapper } from '../../../_components/Styled';
 
 const GAME_SUBSCRIPTION = gql`
   subscription onGameCreated {
@@ -42,7 +43,7 @@ const HIT_SUBSCRIPTION = gql`
   }
 `;
 
-function Apollo() {
+export function ApolloUIClient() {
   const gameSubscription = useSubscription(GAME_SUBSCRIPTION, {
     variables: {},
   });
@@ -56,12 +57,12 @@ function Apollo() {
       gameId: hit.game.id,
       time: hit.createdAt,
     })) || [],
-    [hitSubscription.data],
+    [hitSubscription.data]
   );
 
   return (
     <Grid item xs={12} sm={12} lg={12} xl={12}>
-      <Box elevation={3} m={1} boxShadow={3} p={2}>
+      <Wrapper>
         <Typography variant="h5" display="inline">
           Reporting BFF Server
         </Typography>
@@ -80,7 +81,7 @@ function Apollo() {
             <CircularProgress color="secondary" size={25} />
           </>
         ) : (
-          <Box m={1}>
+          <Box m={3}>
             <Typography variant="body1" gutterBottom color="secondary">
               Game ID:
               {' '}
@@ -89,9 +90,7 @@ function Apollo() {
           </Box>
         )}
         <HitList rows={hitsSummary} />
-      </Box>
+      </Wrapper>
     </Grid>
   );
 }
-
-export default Apollo;
