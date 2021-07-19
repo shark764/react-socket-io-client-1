@@ -67,7 +67,7 @@ function HitList({ rows }) {
               <TableCell className={classes.cell}>{row.value4}</TableCell>
               <TableCell className={classes.cell}>
                 {DateTime.fromISO(row.time).toLocaleString(
-                  DateTime.DATETIME_MED_WITH_SECONDS,
+                  DateTime.DATETIME_MED_WITH_SECONDS
                 )}
               </TableCell>
             </TableRow>

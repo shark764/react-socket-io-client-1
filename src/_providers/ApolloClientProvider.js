@@ -9,14 +9,14 @@ import {
 import PropTypes from 'prop-types';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
-import { rpbffApolloHttpUri, rpbffApolloWsUri } from '../_utilities/consts';
+import { apolloUri, wsApolloUri } from '../_utilities/configuration';
 
 const httpLink = new HttpLink({
-  uri: rpbffApolloHttpUri,
+  uri: apolloUri,
 });
 
 const wsLink = new WebSocketLink({
-  uri: rpbffApolloWsUri,
+  uri: wsApolloUri,
   options: {
     reconnect: true,
     // connectionParams: {
@@ -39,7 +39,7 @@ const splitLink = split(
     );
   },
   wsLink,
-  httpLink,
+  httpLink
 );
 
 const cache = new InMemoryCache();
