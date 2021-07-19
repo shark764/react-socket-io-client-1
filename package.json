@@ -7,7 +7,8 @@
     "node": "14.16.1"
   },
   "scripts": {
-    "start": "BROWSER=none react-scripts start",
+    "start": "react-scripts start",
+    "dev": "BROWSER=none react-scripts start",
     "build": "react-scripts build",
     "build:fix": "react-scripts build && echo '/* /index.html 200' | cat >build/_redirects ",
     "test": "react-scripts test",
@@ -16,7 +17,6 @@
     "lint:fix": "eslint ./src --fix",
     "format": "prettier --write \"**/*.+(js|jsx|json|css|html)\"",
     "prettify": "npm run format && npm run lint:fix",
-    "postinstall": "rm -rf build && npm run build",
     "heroku-postbuild": "npm install"
   },
   "husky": {
