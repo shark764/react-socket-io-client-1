@@ -8,6 +8,7 @@ export function LogProvider({ children }) {
 
   function addEntry(evType = 'ws', text = '', data = null, type = 'info') {
     setEntries((allEntries) => [
+      ...allEntries,
       {
         id: faker.datatype.uuid(),
         evType,
@@ -16,7 +17,6 @@ export function LogProvider({ children }) {
         type,
         timestamp: new Date(),
       },
-      ...allEntries,
     ]);
   }
 
