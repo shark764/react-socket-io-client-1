@@ -5,6 +5,7 @@ import {
   Button,
   Divider,
   Grid,
+  MenuItem,
   TextField,
   Typography,
 } from '@material-ui/core';
@@ -18,7 +19,12 @@ import {
   securityUrl,
 } from '../../../_utilities/configuration';
 import * as EVENTS from '../../../_events/reporting';
-import { errorHandler, log } from '../../../_utilities';
+import {
+  errorHandler,
+  getTemplate,
+  log,
+  reportingTemplates,
+} from '../../../_utilities';
 import { useLogContext } from '../../LogContext';
 import { Wrapper } from '../../../_components/Styled';
 
@@ -38,6 +44,10 @@ export function ReportingClient() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [token, setToken] = React.useState('');
+  const [templateId, setTemplateId] = React.useState('');
+  const [bodyTemplate, setBodyTemplate] = React.useState(
+    getTemplate(templateId)
+  );
 
   React.useEffect(() => {
     // effect
@@ -189,7 +199,7 @@ export function ReportingClient() {
       );
     });
 
-    // Events comming from game-controller
+    // Events coming from game-controller
     socket.on(EVENTS.DEVICES_CONTEXT_UPDATE, (message) => {
       log('success', EVENTS.DEVICES_CONTEXT_UPDATE, message);
       addEntry(
@@ -414,6 +424,31 @@ export function ReportingClient() {
       );
     }
   };
+  const handleHeartbeatHttp = async () => {
+    try {
+      addEntry('http', `POST ${baseHttpUri}/heartbeat called`, null, 'info');
+      const res = await axios.post(
+        `${baseHttpUri}/heartbeat`,
+        jsonValue,
+        requestConfig
+      );
+      log('success', `POST ${baseHttpUri}/heartbeat succeeded`, res.data);
+      addEntry(
+        'http',
+        `POST ${baseHttpUri}/heartbeat succeeded`,
+        res.data,
+        'success'
+      );
+    } catch (error) {
+      errorHandler(error);
+      addEntry(
+        'http',
+        `POST ${baseHttpUri}/heartbeat failed`,
+        error.response ?? null,
+        'error'
+      );
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -444,6 +479,14 @@ export function ReportingClient() {
     setJsonValue(data.jsObject);
   };
 
+  const handleTemplateIdChange = (event) => {
+    const { value } = event.target;
+    setTemplateId(value);
+    const body = getTemplate(value);
+    setBodyTemplate(body);
+    setJsonValue(body);
+  };
+
   return (
     <Grid item xs={12} sm={12} lg={12} xl={12}>
       <Wrapper>
@@ -466,6 +509,7 @@ export function ReportingClient() {
                 color="primary"
                 size="small"
                 onClick={handleGetServerStatus}
+                disabled
               >
                 Get Server Status
               </Button>
@@ -474,6 +518,7 @@ export function ReportingClient() {
                 color="primary"
                 size="small"
                 onClick={handleGetServerLog}
+                disabled
               >
                 Get Server Log
               </Button>
@@ -482,6 +527,7 @@ export function ReportingClient() {
                 color="primary"
                 size="small"
                 onClick={handleGetRegisteredDevices}
+                disabled
               >
                 Get Registered Devices
               </Button>
@@ -490,6 +536,7 @@ export function ReportingClient() {
                 color="primary"
                 size="small"
                 onClick={handleSetState}
+                disabled
               >
                 Set State
               </Button>
@@ -498,6 +545,7 @@ export function ReportingClient() {
                 color="primary"
                 size="small"
                 onClick={handleStartGame}
+                disabled
               >
                 Start Game
               </Button>
@@ -506,6 +554,7 @@ export function ReportingClient() {
                 color="primary"
                 size="small"
                 onClick={handleEndGame}
+                disabled
               >
                 End Game
               </Button>
@@ -582,12 +631,19 @@ export function ReportingClient() {
                 )}
               </Box>
 
+              {token === '' && (
+                <Typography color="error" variant="body2">
+                  HTTP Request action buttons are not allowed if token is not
+                  set, please Log in
+                </Typography>
+              )}
               <Button
                 variant="contained"
                 color="secondary"
                 size="small"
                 onClick={handleGetServerStatusHttp}
-                disabled={token === ''}
+                // disabled={token === ''}
+                disabled
               >
                 Get Server Status
               </Button>
@@ -596,7 +652,8 @@ export function ReportingClient() {
                 color="secondary"
                 size="small"
                 onClick={handleGetServerLogHttp}
-                disabled={token === ''}
+                // disabled={token === ''}
+                disabled
               >
                 Get Server Log
               </Button>
@@ -605,7 +662,8 @@ export function ReportingClient() {
                 color="secondary"
                 size="small"
                 onClick={handleGetRegisteredDevicesHttp}
-                disabled={token === ''}
+                // disabled={token === ''}
+                disabled
               >
                 Get Registered Devices
               </Button>
@@ -614,7 +672,8 @@ export function ReportingClient() {
                 color="secondary"
                 size="small"
                 onClick={handleSetStateHttp}
-                disabled={token === ''}
+                // disabled={token === ''}
+                disabled
               >
                 Set State
               </Button>
@@ -623,7 +682,8 @@ export function ReportingClient() {
                 color="secondary"
                 size="small"
                 onClick={handleStartGameHttp}
-                disabled={token === ''}
+                // disabled={token === ''}
+                disabled
               >
                 Start Game
               </Button>
@@ -632,9 +692,19 @@ export function ReportingClient() {
                 color="secondary"
                 size="small"
                 onClick={handleEndGameHttp}
-                disabled={token === ''}
+                // disabled={token === ''}
+                disabled
               >
                 End Game
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                size="small"
+                onClick={handleHeartbeatHttp}
+                disabled={token === ''}
+              >
+                Send Heartbeat
               </Button>
             </Box>
           </Grid>
@@ -643,12 +713,29 @@ export function ReportingClient() {
               <Typography variant="body1" color="textSecondary">
                 Body
               </Typography>
+              <TextField
+                select
+                label="Template"
+                value={templateId}
+                onChange={handleTemplateIdChange}
+                size="small"
+                helperText="You can add a predefined template"
+                InputProps={{ margin: 'dense' }}
+              >
+                <MenuItem value="">-- choose template --</MenuItem>
+                {reportingTemplates.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
               <JSONInput
-                placeholder={{ data: 'paste your json here...' }}
+                placeholder={bodyTemplate}
                 locale={locale}
                 height="300px"
                 width="auto"
                 onChange={onJsonInputChange}
+                // reset
                 theme="light_mitsuketa_tribute"
               />
             </Box>

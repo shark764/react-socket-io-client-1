@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { io } from 'socket.io-client';
 import {
-  Box, Button, Divider, Grid, Typography
+  Box,
+  Button,
+  Divider,
+  Grid,
+  MenuItem,
+  TextField,
+  Typography,
 } from '@material-ui/core';
 import axios from 'axios';
 import JSONInput from 'react-json-editor-ajrm';
@@ -11,7 +17,12 @@ import {
   baseApiUrl,
 } from '../../../_utilities/configuration';
 import * as EVENTS from '../../../_events/game-controller';
-import { errorHandler, log } from '../../../_utilities';
+import {
+  errorHandler,
+  gameControllerTemplates,
+  getTemplate,
+  log,
+} from '../../../_utilities';
 import { useLogContext } from '../../LogContext';
 import { Wrapper } from '../../../_components/Styled';
 
@@ -20,6 +31,10 @@ export function DeviceSimulator() {
   const [channel, setChannel] = React.useState(null);
   const [jsonValue, setJsonValue] = React.useState({});
   const { addEntry } = useLogContext();
+  const [templateId, setTemplateId] = React.useState('');
+  const [bodyTemplate, setBodyTemplate] = React.useState(
+    getTemplate(templateId)
+  );
 
   React.useEffect(() => {
     // effect
@@ -130,7 +145,7 @@ export function DeviceSimulator() {
     });
 
     /**
-     * Events comming from game-controller
+     * Events coming from game-controller
      */
     socket.on(EVENTS.SET_DEVICE_CONFIG, (message) => {
       log('info', EVENTS.SET_DEVICE_CONFIG, message);
@@ -167,30 +182,13 @@ export function DeviceSimulator() {
     socket.on(EVENTS.START_DEVICE, (message) => {
       log('info', EVENTS.START_DEVICE, message);
       addEntry('ws', `Event ${EVENTS.START_DEVICE} received`, message, 'info');
-      socket.emit(EVENTS.HIT, {
-        device_id: '',
-        hit_sequence: 0,
-        hit_time: new Date().getTime(),
-        hit_power: 80,
-        hit_direction: 0,
-        hit_distance: 0,
-      });
+      socket.emit(EVENTS.HIT, getTemplate('hitSeq0'));
       addEntry('ws', `Event ${EVENTS.HIT} emitted`, null, 'info');
     });
     socket.on(EVENTS.STATUS, (message) => {
       log('info', EVENTS.STATUS, message);
       addEntry('ws', `Event ${EVENTS.STATUS} received`, message, 'info');
-      socket.emit(EVENTS.REGISTER, {
-        start_effect: '',
-        hit_effect: '',
-        complete_effect: '',
-        timeout_effect: '',
-        errant_effect: '',
-        local_connect: '',
-        serial_connect: '',
-        remote_connect: '',
-        remote_display_ip: '',
-      });
+      socket.emit(EVENTS.REGISTER, getTemplate('register'));
       addEntry('ws', `Event ${EVENTS.REGISTER} emitted`, null, 'info');
     });
 
@@ -307,6 +305,14 @@ export function DeviceSimulator() {
     setJsonValue(data.jsObject);
   };
 
+  const handleTemplateIdChange = (event) => {
+    const { value } = event.target;
+    setTemplateId(value);
+    const body = getTemplate(value);
+    setBodyTemplate(body);
+    setJsonValue(body);
+  };
+
   return (
     <Grid item xs={12} sm={12} lg={12} xl={12}>
       <Wrapper>
@@ -344,17 +350,17 @@ export function DeviceSimulator() {
                 variant="contained"
                 color="primary"
                 size="small"
-                onClick={handleDisplay}
+                onClick={handleHit}
               >
-                Display
+                Hit
               </Button>
               <Button
                 variant="contained"
                 color="primary"
                 size="small"
-                onClick={handleHit}
+                onClick={handleDisplay}
               >
-                Hit
+                Display
               </Button>
             </Box>
 
@@ -384,17 +390,17 @@ export function DeviceSimulator() {
               <Button
                 variant="contained"
                 color="secondary"
-                size="small"
-                onClick={handleDisplayHttp}
+                onClick={handleHitHttp}
               >
-                Display
+                Hit
               </Button>
               <Button
                 variant="contained"
                 color="secondary"
-                onClick={handleHitHttp}
+                size="small"
+                onClick={handleDisplayHttp}
               >
-                Hit
+                Display
               </Button>
             </Box>
           </Grid>
@@ -403,12 +409,29 @@ export function DeviceSimulator() {
               <Typography variant="body1" color="textSecondary">
                 Body
               </Typography>
+              <TextField
+                select
+                label="Template"
+                value={templateId}
+                onChange={handleTemplateIdChange}
+                size="small"
+                helperText="You can add a predefined template"
+                InputProps={{ margin: 'dense' }}
+              >
+                <MenuItem value="">-- choose template --</MenuItem>
+                {gameControllerTemplates.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
               <JSONInput
-                placeholder={{ data: 'paste your json here...' }}
+                placeholder={bodyTemplate}
                 locale={locale}
                 height="300px"
                 width="auto"
                 onChange={onJsonInputChange}
+                // reset
                 theme="light_mitsuketa_tribute"
               />
             </Box>
