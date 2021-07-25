@@ -449,6 +449,36 @@ export function ReportingClient() {
       );
     }
   };
+  const handlePostCommandHttp = async () => {
+    try {
+      addEntry(
+        'http',
+        `POST ${baseHttpUri}/device-commands called`,
+        null,
+        'info'
+      );
+      const res = await axios.post(
+        `${baseHttpUri}/device-commands`,
+        jsonValue,
+        requestConfig
+      );
+      log('success', `POST ${baseHttpUri}/device-commands succeeded`, res.data);
+      addEntry(
+        'http',
+        `POST ${baseHttpUri}/device-commands succeeded`,
+        res.data,
+        'success'
+      );
+    } catch (error) {
+      errorHandler(error);
+      addEntry(
+        'http',
+        `POST ${baseHttpUri}/device-commands failed`,
+        error.response ?? null,
+        'error'
+      );
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -696,6 +726,15 @@ export function ReportingClient() {
                 disabled
               >
                 End Game
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                size="small"
+                onClick={handlePostCommandHttp}
+                disabled={token === ''}
+              >
+                Post Command
               </Button>
               <Button
                 variant="contained"
